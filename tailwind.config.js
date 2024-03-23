@@ -1,3 +1,4 @@
+import defaultTheme from "tailwindcss/defaultTheme";
 import tailwindAnimate from "tailwindcss-animate";
 
 /** @type {import('tailwindcss').Config} */
@@ -11,6 +12,9 @@ export default {
   ],
   prefix: "",
   theme: {
+    fontFamily: {
+      sans: ["Inter", ...defaultTheme.fontFamily.sans],
+    },
     container: {
       center: true,
       padding: "2rem",
