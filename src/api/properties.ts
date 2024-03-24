@@ -1,4 +1,10 @@
-export const propertiesMock = [
+import { Property } from "@/types";
+
+import apartmentImage from "../assets/images/f10333db-ee78-472a-a825-eb0e821ec83d.webp";
+import cottageImage from "../assets/images/3e50c1ef-050c-4338-b06d-7dad82417a89.webp";
+import beachfrontImage from "../assets/images/2d9f5ff2-080c-4678-92ff-d8e366fbf55c.webp";
+
+export const propertiesMock: Property[] = [
   {
     id: 23101986,
     title: "Cozy downtown apartment",
@@ -7,7 +13,7 @@ export const propertiesMock = [
     description:
       "Experience the best São Paulo has to offer in this modern apartment.",
     price: 400,
-    image: "f10333db-ee78-472a-a825-eb0e821ec83d.webp",
+    image: apartmentImage,
     amenities: [
       "High-Speed Wi-Fi",
       "Fully Equipped Kitchen",
@@ -31,8 +37,8 @@ export const propertiesMock = [
     location: "Itajubá, Brazil",
     description:
       "Forget your worries in this spacious and quiet place. Ideal place for couples seeking moments of contemplation of nature and reconnection with all the comforts of a modern house.",
-    price: 900,
-    image: "3e50c1ef-050c-4338-b06d-7dad82417a89.webp",
+    price: 925,
+    image: cottageImage,
     amenities: [
       "Mountain view",
       "Waterfront",
@@ -58,7 +64,7 @@ export const propertiesMock = [
     description:
       "Beautiful and cozy house facing the sea/coastal. One of the best views in the sunset in Ilhabela! Available for New Year's Eve 2024",
     price: 15976,
-    image: "2d9f5ff2-080c-4678-92ff-d8e366fbf55c.webp",
+    image: beachfrontImage,
     amenities: [
       "Free parking on premises",
       "Sea view",
