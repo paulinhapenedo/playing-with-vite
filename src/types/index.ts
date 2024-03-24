@@ -17,3 +17,13 @@ export type Property = {
   pets: boolean;
   maxPets: number;
 };
+
+export type ReservationData = {
+  startDate: string;
+  endDate: string;
+  totalValue: number;
+};
+
+export type BookReservationProps = Pick<Property, "id"> & {
+  reservations: ReservationData[];
+};
