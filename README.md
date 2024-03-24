@@ -1,30 +1,26 @@
-# React + TypeScript + Vite
+# Vite Travel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project was built using Node v20.9.0 and [pnpm](https://pnpm.io/).
 
-Currently, two official plugins are available:
+```bash
+## go to project's folder
+cd playing-with-vite
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## install dependencies
+pnpm i
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## start project in development mode
+pnpm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Development Log
+
+**March, 23 2024**
+Start of the jorney! Decided to use Vite + React + TypeScript for the stack because it's been a while since I've worked outside the Next.js ecossystem. Installed eslint, Prettier, Vitest and React Testing Library.
+
+Went with shadcn for components because of the aforementioned experience in the Next.js ecossystem, but that might change.
+
+
+**March, 24 2024**
+Decided for Neubrutalism for the design. It's a trend I'm really into in the last months because it stands out from the sea of Vercel/Apple-like futuristic approaches (I love purple and deep blue, but I'm done with those background gradients).
+
