@@ -10,7 +10,7 @@ export function PropertyList() {
           {strings.sectionTitle}
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-screen-xl">
+        <div className="flex flex-col md:grid md:grid-cols-3 gap-6 max-w-sm md:max-w-screen-xl">
           {propertiesMock.map((property) => (
             <PropertyCard property={property} key={property.id} />
           ))}
