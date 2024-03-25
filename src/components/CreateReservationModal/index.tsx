@@ -117,7 +117,7 @@ export function CreateReservationModal({
               </div>
             )}
             <DialogFooter className="border-t pt-4 gap-3 md:gap-0">
-              <Button variant="outline" onClick={onCloseModal}>
+              <Button variant="outline" onClick={onCloseModal} type="button">
                 {strings.cta.seconday}
               </Button>
               <Button type="submit" disabled={!daysTotal}>
