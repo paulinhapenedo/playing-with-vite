@@ -18,12 +18,13 @@ export type Property = {
   maxPets: number;
 };
 
-export type ReservationData = {
-  startDate: string;
-  endDate: string;
-  totalValue: number;
+export type DateRange = {
+  startDate: Date;
+  endDate: Date;
 };
 
+export type ReservationData = Pick<Property, "id"> & DateRange;
+
 export type BookReservationProps = Pick<Property, "id"> & {
-  reservations: ReservationData[];
+  reservations: DateRange[];
 };
