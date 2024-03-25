@@ -1,12 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays, differenceInCalendarDays } from "date-fns";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { Matcher } from "react-day-picker";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { FIVE_DAYS_FROM_TODAY, TODAY } from "@/lib/date";
+import {
+  FIVE_DAYS_FROM_TODAY,
+  TODAY,
+  dayAfterLatestReservationDate,
+  fiveDaysFromDate,
+  latestReservationDate,
+} from "@/lib/date";
 import { useBookingStore } from "@/stores/booking";
 import { Property, ReservationData } from "@/types";
 
@@ -16,13 +21,51 @@ const formSchema = z.object({
 });
 
 export const useCreateReservation = (property: Property) => {
-  const { confirmReservation, bookings } = useBookingStore();
   const [openModal, setOpenModal] = useState(false);
+  const { confirmReservation, bookings } = useBookingStore();
+
+  /**
+   * checks if we need to disable dates on the calendar
+   * because there's a booking with those dates
+   */
+  const disableDaysWithReservations = useMemo(() => {
+    if (!bookings.length) return;
+
+    const getReservationsById = bookings.filter(
+      (booking) => booking.id === property.id,
+    );
+
+    if (!getReservationsById.length) return;
+
+    const disabledDays = getReservationsById[0].reservations.map((dates) => ({
+      from: dates.startDate,
+      to: dates.endDate,
+    }));
+
+    return disabledDays;
+  }, [bookings, property.id]);
+
+  /**
+   * maps through all reservation dates and gets the latest
+   * we're using to set the initial dates on the modal when booking
+   */
+  const getLatestReservationDate =
+    disableDaysWithReservations &&
+    latestReservationDate(
+      disableDaysWithReservations?.map((reservation) => reservation.to),
+    );
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       from: TODAY, // sensible defaults
       to: FIVE_DAYS_FROM_TODAY, // sensible defaults
+    },
+    values: {
+      from: getLatestReservationDate
+        ? dayAfterLatestReservationDate(getLatestReservationDate)
+        : TODAY,
+      to: fiveDaysFromDate(getLatestReservationDate) ?? FIVE_DAYS_FROM_TODAY,
     },
   });
 
@@ -80,27 +123,8 @@ export const useCreateReservation = (property: Property) => {
     confirmReservation(payload);
     onCloseModal();
 
-    toast.success("Event has been created.");
+    toast.success("Reservation successful!");
   };
-
-  const disableDaysWithReservations = useMemo(() => {
-    if (!bookings.length) return;
-
-    const getReservationsById = bookings.filter(
-      (booking) => booking.id === property.id,
-    );
-
-    if (!getReservationsById.length) return;
-
-    const disabledDays: Matcher[] = getReservationsById[0].reservations.map(
-      (dates) => ({
-        from: dates.startDate,
-        to: dates.endDate,
-      }),
-    );
-
-    return disabledDays;
-  }, [bookings, property.id]);
 
   return {
     onSubmit,
