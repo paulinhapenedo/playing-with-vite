@@ -1,13 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addDays, differenceInCalendarDays } from "date-fns";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { Matcher } from "react-day-picker";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { FIVE_DAYS_FROM_TODAY, TODAY } from "@/lib/date";
 import { useBookingStore } from "@/stores/booking";
 import { Property, ReservationData } from "@/types";
-import { addDays, differenceInCalendarDays } from "date-fns";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { Matcher } from "react-day-picker";
 
 const formSchema = z.object({
   from: z.date(),
@@ -15,6 +16,7 @@ const formSchema = z.object({
 });
 
 export const useCreateReservation = (property: Property) => {
+  const { confirmReservation, bookings } = useBookingStore();
   const [openModal, setOpenModal] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -23,8 +25,6 @@ export const useCreateReservation = (property: Property) => {
       to: FIVE_DAYS_FROM_TODAY, // sensible defaults
     },
   });
-
-  const { confirmReservation, bookings } = useBookingStore();
 
   // watching the dates change
   const startDate = form.watch().from;
@@ -79,6 +79,8 @@ export const useCreateReservation = (property: Property) => {
 
     confirmReservation(payload);
     onCloseModal();
+
+    toast.success("Event has been created.");
   };
 
   const disableDaysWithReservations = useMemo(() => {

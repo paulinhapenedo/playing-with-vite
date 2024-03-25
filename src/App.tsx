@@ -1,6 +1,7 @@
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { PropertyList } from "./components/PropertyList";
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Header />
       <PropertyList />
       <Footer />
+      <Toaster richColors />
     </main>
   );
 }
