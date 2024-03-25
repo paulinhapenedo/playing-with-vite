@@ -39,6 +39,7 @@ export function CreateReservationModal({
     openModal,
     onModalOpenChange,
     onCloseModal,
+    disableDaysWithReservations,
   } = useCreateReservation(property);
 
   return (
@@ -58,9 +59,14 @@ export function CreateReservationModal({
                 name="from"
                 render={({ field }) => (
                   <FormItem className="flex flex-col flex-1">
-                    <FormLabel>Checkin</FormLabel>
+                    <FormLabel>{strings.formLabel.startDate}</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} fromDate={TODAY} required />
+                      <DatePicker
+                        {...field}
+                        fromDate={TODAY}
+                        required
+                        disabled={disableDaysWithReservations}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -71,12 +77,13 @@ export function CreateReservationModal({
                 name="to"
                 render={({ field }) => (
                   <FormItem className="flex flex-col flex-1">
-                    <FormLabel>Checkout</FormLabel>
+                    <FormLabel>{strings.formLabel.endDate}</FormLabel>
                     <FormControl>
                       <DatePicker
                         {...field}
                         fromDate={form.watch().from ?? TODAY}
                         required
+                        disabled={disableDaysWithReservations}
                       />
                     </FormControl>
                     <FormMessage />
@@ -95,13 +102,13 @@ export function CreateReservationModal({
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="leading-7 [&:not(:first-child)]:mt-6">
-                    Cleaning fee:
+                    {strings.cleaningFee}
                   </p>
                   <p>{formatPriceToCurrency(property.cleaningFee)}</p>
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="leading-7 [&:not(:first-child)]:mt-6">
-                    Total before taxes:
+                    {strings.totalBeforeTaxes}
                   </p>
                   <p>{formatPriceToCurrency(totalPrice!)}</p>
                 </div>

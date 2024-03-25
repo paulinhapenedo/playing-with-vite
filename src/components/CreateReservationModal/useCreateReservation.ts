@@ -6,7 +6,8 @@ import { FIVE_DAYS_FROM_TODAY, TODAY } from "@/lib/date";
 import { useBookingStore } from "@/stores/booking";
 import { Property, ReservationData } from "@/types";
 import { addDays, differenceInCalendarDays } from "date-fns";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { Matcher } from "react-day-picker";
 
 const formSchema = z.object({
   from: z.date(),
@@ -23,7 +24,7 @@ export const useCreateReservation = (property: Property) => {
     },
   });
 
-  const { confirmReservation } = useBookingStore();
+  const { confirmReservation, bookings } = useBookingStore();
 
   // watching the dates change
   const startDate = form.watch().from;
@@ -80,6 +81,25 @@ export const useCreateReservation = (property: Property) => {
     onCloseModal();
   };
 
+  const disableDaysWithReservations = useMemo(() => {
+    if (!bookings.length) return;
+
+    const getReservationsById = bookings.filter(
+      (booking) => booking.id === property.id,
+    );
+
+    if (!getReservationsById.length) return;
+
+    const disabledDays: Matcher[] = getReservationsById[0].reservations.map(
+      (dates) => ({
+        from: dates.startDate,
+        to: dates.endDate,
+      }),
+    );
+
+    return disabledDays;
+  }, [bookings, property.id]);
+
   return {
     onSubmit,
     form,
@@ -89,5 +109,6 @@ export const useCreateReservation = (property: Property) => {
     openModal,
     onModalOpenChange,
     onCloseModal,
+    disableDaysWithReservations,
   };
 };
