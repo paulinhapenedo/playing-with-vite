@@ -2,6 +2,8 @@ import { Star } from "lucide-react";
 
 import { formatPriceToCurrency } from "@/lib/currency";
 import { Property } from "@/types";
+import { Button } from "@/components/ui/button";
+import { CreateReservationModal } from "../CreateReservationModal";
 
 interface PropertyCardProps {
   property: Property;
@@ -9,7 +11,7 @@ interface PropertyCardProps {
 
 export function PropertyCard({ property }: PropertyCardProps) {
   return (
-    <article className="bg-white border border-slate-950 px-6 py-4 shadow-black shadow-[5px_5px_0px_0px_rgba(0,0,0)]">
+    <article className="border border-slate-950 px-6 py-4 shadow-black shadow-[5px_5px_0px_0px_rgba(0,0,0)]">
       <div className="w-full aspect-[5/4] md:aspect-[3/4] relative border border-slate-950 mb-3">
         <img
           src={property.image}
@@ -33,6 +35,11 @@ export function PropertyCard({ property }: PropertyCardProps) {
             <Star size={16} fill="black" />
             <span className="text-sm">{property.rating}</span>
           </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <CreateReservationModal property={property} />
+          <Button>Edit reservation</Button>
+          <Button variant="destructive">Cancel reservation</Button>
         </div>
       </div>
     </article>
