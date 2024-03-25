@@ -7,6 +7,7 @@ export const strings = {
   },
   cleaningFee: "Cleaning fee",
   totalBeforeTaxes: "Total before taxes",
+  totalNights: (nights: number) => `x${nights} nights`,
   cta: {
     primary: "Confirm reservation",
     seconday: "Cancel",

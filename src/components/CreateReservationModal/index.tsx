@@ -92,11 +92,13 @@ export function CreateReservationModal({
               />
             </div>
             {daysTotal && (
-              <>
+              <div className="mt-6">
                 <div className="flex justify-between items-center">
                   <p className="leading-7 [&:not(:first-child)]:mt-6">
-                    {formatPriceToCurrency(property.price)}x
-                    {daysBetweenStartEnd}
+                    <span className="font-semibold">
+                      {formatPriceToCurrency(property.price)}{" "}
+                    </span>
+                    {strings.totalNights(daysBetweenStartEnd!)}
                   </p>
                   <p>{formatPriceToCurrency(daysTotal)}</p>
                 </div>
@@ -106,13 +108,13 @@ export function CreateReservationModal({
                   </p>
                   <p>{formatPriceToCurrency(property.cleaningFee)}</p>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center my-4 font-semibold">
                   <p className="leading-7 [&:not(:first-child)]:mt-6">
                     {strings.totalBeforeTaxes}
                   </p>
                   <p>{formatPriceToCurrency(totalPrice!)}</p>
                 </div>
-              </>
+              </div>
             )}
             <DialogFooter className="border-t pt-4 gap-3 md:gap-0">
               <Button variant="outline" onClick={onCloseModal}>
