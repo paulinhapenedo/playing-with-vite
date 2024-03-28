@@ -1,17 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays, differenceInCalendarDays } from "date-fns";
-import { useCallback, useEffect, useMemo, useState } from "react";
+  addDays,
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import {
-  FIVE_DAYS_FROM_TODAY,
-  TODAY,
-  dayAfterLatestReservationDate,
-  fiveDaysFromDate,
-  latestReservationDate,
-} from "@/lib/date";
 import { useBookingStore } from "@/stores/booking";
 import { Property, ReservationData } from "@/types";
 
@@ -45,28 +39,8 @@ export const useCreateReservation = (property: Property) => {
     return disabledDays;
   }, [bookings, property.id]);
 
-  /**
-   * maps through all reservation dates and gets the latest
-   * we're using to set the initial dates on the modal when booking
-   */
-  const getLatestReservationDate =
-    disableDaysWithReservations &&
-    latestReservationDate(
-      disableDaysWithReservations?.map((reservation) => reservation.to),
-    );
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      from: TODAY, // sensible defaults
-      to: FIVE_DAYS_FROM_TODAY, // sensible defaults
-    },
-    values: {
-      from: getLatestReservationDate
-        ? dayAfterLatestReservationDate(getLatestReservationDate)
-        : TODAY,
-      to: fiveDaysFromDate(getLatestReservationDate) ?? FIVE_DAYS_FROM_TODAY,
-    },
   });
 
   // watching the dates change
