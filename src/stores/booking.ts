@@ -1,12 +1,13 @@
 import { create } from "zustand";
 
-import { BookReservationProps, ReservationData } from "@/types";
+import { BookReservationProps, DateRange, ReservationData } from "@/types";
 
 interface StateProps {
   bookings: BookReservationProps[];
   confirmReservation: (reservationData: ReservationData) => void;
   cancelReservation: (id: number) => void;
   editReservation: (reservationData: BookReservationProps) => void;
+  getReservationsByPropertyId: (id: number) => DateRange[];
 }
 
 export const useBookingStore = create<StateProps>((set, get) => ({
@@ -53,5 +54,18 @@ export const useBookingStore = create<StateProps>((set, get) => ({
     set(() => ({
       bookings: updatedBookings,
     }));
+  },
+  getReservationsByPropertyId: (id) => {
+    const currentBookings = get().bookings;
+    const getPropertyBookings = currentBookings
+      .filter((booking) => {
+        if (booking.id !== id) return;
+
+        return booking.reservations;
+      })
+      .filter(Boolean)
+      .flatMap((booking) => booking.reservations);
+
+    return getPropertyBookings;
   },
 }));

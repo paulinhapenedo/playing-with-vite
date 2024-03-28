@@ -1,10 +1,10 @@
 import { Star } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { formatPriceToCurrency } from "@/lib/currency";
 import { useBookingStore } from "@/stores/booking";
 import { Property } from "@/types";
 import { CreateReservationModal } from "../CreateReservationModal";
+import { ReservationList } from "../ReservationList";
 import { strings } from "./strings";
 
 interface PropertyCardProps {
@@ -47,8 +47,8 @@ export function PropertyCard({ property }: PropertyCardProps) {
         {hasReservations && (
           <div className="flex flex-wrap gap-2">
             <p className="text-sm ">{strings.changeReservation}</p>
-            <Button variant="outline">Edit</Button>
-            <Button variant="destructive">Cancel</Button>
+
+            <ReservationList id={property.id} />
           </div>
         )}
       </div>
