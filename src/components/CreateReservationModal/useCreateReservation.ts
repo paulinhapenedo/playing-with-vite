@@ -1,6 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addDays, differenceInCalendarDays } from "date-fns";
+import {
   addDays,
+  areIntervalsOverlapping,
+  differenceInCalendarDays,
+} from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,7 +25,7 @@ export const useCreateReservation = (property: Property) => {
    * checks if we need to disable dates on the calendar
    * because there's a booking with those dates
    */
-  const disableDaysWithReservations = useMemo(() => {
+  const disableDaysWithReservations = useCallback(() => {
     if (!bookings.length) return;
 
     const getReservationsById = bookings.filter(
@@ -83,8 +86,35 @@ export const useCreateReservation = (property: Property) => {
     [onCloseModal],
   );
 
+  const checkIfConflictsWithOtherConfigs = useCallback(
+    (range: { start: Date; end: Date }) =>
+      bookings
+        .map((booking) =>
+          booking.reservations?.find((config) =>
+            areIntervalsOverlapping(range, {
+              start: new Date(config.startDate),
+              end: new Date(config.endDate),
+            }),
+          ),
+        )
+        .filter(Boolean),
+    [bookings],
+  );
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (!hasDates) {
+      return;
+    }
+
+    const hasConflicts = checkIfConflictsWithOtherConfigs({
+      start: values.from,
+      end: values.to,
+    });
+
+    if (hasConflicts.length) {
+      toast.error(
+        "The selected days conflicts with another reservation. Please check the values.",
+      );
       return;
     }
 

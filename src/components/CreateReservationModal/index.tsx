@@ -53,7 +53,7 @@ export function CreateReservationModal({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-3 mb-6">
               <FormField
                 control={form.control}
                 name="from"
@@ -65,7 +65,7 @@ export function CreateReservationModal({
                         {...field}
                         fromDate={TODAY}
                         required
-                        disabled={disableDaysWithReservations}
+                        disabled={disableDaysWithReservations()}
                       />
                     </FormControl>
                     <FormMessage />
@@ -83,7 +83,7 @@ export function CreateReservationModal({
                         {...field}
                         fromDate={form.watch().from ?? TODAY}
                         required
-                        disabled={disableDaysWithReservations}
+                        disabled={disableDaysWithReservations()}
                       />
                     </FormControl>
                     <FormMessage />
