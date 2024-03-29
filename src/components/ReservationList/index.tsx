@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import { useBookingStore } from "@/stores/booking";
 import { DeleteReservationModal } from "../DeleteReservationModal";
+import { EditReservationModal } from "../EditReservationModal";
 
 interface ReservationListProps {
   propertyId: number;
@@ -27,7 +28,7 @@ export function ReservationList({ propertyId }: ReservationListProps) {
             {format(data.endDate, "dd/MM/yy")}
           </p>
           <div className="flex gap-2">
-            {/* <EditReservationModal id={id} /> */}
+            <EditReservationModal reservationId={data.reservationId} />
             <DeleteReservationModal reservationId={data.reservationId} />
           </div>
         </li>
