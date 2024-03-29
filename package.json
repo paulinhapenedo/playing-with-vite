@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "test:watch": "vitest watch",
     "test:ci": "vitest run",
-    "test:update-snapshot": "vitest -u"
+    "test:update-snapshot": "vitest -u",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -37,6 +38,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.42.1",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.2",
     "@types/node": "^20.11.30",
