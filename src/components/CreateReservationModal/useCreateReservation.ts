@@ -22,26 +22,24 @@ export const useCreateReservation = (property: Property) => {
   const [openModal, setOpenModal] = useState(false);
   const { confirmReservation, bookings } = useBookingStore();
 
+  const getAllBookingsForProperty = bookings.filter(
+    (booking) => booking.propertyId === property.id,
+  );
+
   /**
    * checks if we need to disable dates on the calendar
    * because there's a booking with those dates
    */
   const disableDaysWithReservations = useCallback(() => {
-    if (!bookings.length) return;
+    if (!getAllBookingsForProperty.length) return;
 
-    const getAllReservationsFromProperty = bookings.filter(
-      (booking) => booking.propertyId === property.id,
-    );
-
-    if (!getAllReservationsFromProperty.length) return;
-
-    const disabledDays = getAllReservationsFromProperty.map((dates) => ({
+    const disabledDays = getAllBookingsForProperty.map((dates) => ({
       from: dates.startDate,
       to: dates.endDate,
     }));
 
     return disabledDays;
-  }, [bookings, property.id]);
+  }, [getAllBookingsForProperty]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,7 +87,7 @@ export const useCreateReservation = (property: Property) => {
 
   const checkIfConflictsWithOtherConfigs = useCallback(
     (range: { start: Date; end: Date }) =>
-      bookings
+      getAllBookingsForProperty
         .map((booking) =>
           areIntervalsOverlapping(range, {
             start: new Date(booking.startDate),
@@ -97,7 +95,7 @@ export const useCreateReservation = (property: Property) => {
           }),
         )
         .filter(Boolean),
-    [bookings],
+    [getAllBookingsForProperty],
   );
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -123,8 +121,6 @@ export const useCreateReservation = (property: Property) => {
       endDate: values.to,
       reservationId: uuidv4(),
     };
-
-    console.log("payload", payload);
 
     confirmReservation(payload);
     onCloseModal();
