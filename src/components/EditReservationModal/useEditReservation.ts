@@ -27,7 +27,9 @@ export const useEditReservation = (reservationId: string) => {
   )[0];
 
   const getAllBookingsForProperty = bookings.filter(
-    (booking) => booking.propertyId === getReservationById.propertyId,
+    (booking) =>
+      booking.propertyId === getReservationById.propertyId &&
+      booking.reservationId !== reservationId,
   );
 
   const currentPropertyData = propertiesMock.filter(
@@ -51,7 +53,7 @@ export const useEditReservation = (reservationId: string) => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    values: {
       from: getReservationById.startDate,
       to: getReservationById.endDate,
     },
@@ -101,7 +103,7 @@ export const useEditReservation = (reservationId: string) => {
 
   const checkIfConflictsWithOtherConfigs = useCallback(
     (range: { start: Date; end: Date }) =>
-      bookings
+      getAllBookingsForProperty
         .map((booking) =>
           areIntervalsOverlapping(range, {
             start: new Date(booking.startDate),
@@ -109,7 +111,7 @@ export const useEditReservation = (reservationId: string) => {
           }),
         )
         .filter(Boolean),
-    [bookings],
+    [getAllBookingsForProperty],
   );
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
