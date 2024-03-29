@@ -15,7 +15,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const { bookings } = useBookingStore();
 
   const hasReservations =
-    bookings.filter((booking) => booking.id === property.id).length > 0;
+    bookings.filter((booking) => booking.propertyId === property.id).length > 0;
 
   return (
     <article className="border border-slate-950 px-6 py-4 shadow-black shadow-[5px_5px_0px_0px_rgba(0,0,0)]">
@@ -48,7 +48,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <div className="flex flex-wrap gap-2">
             <p className="text-sm ">{strings.changeReservation}</p>
 
-            <ReservationList id={property.id} />
+            <ReservationList propertyId={property.id} />
           </div>
         )}
       </div>

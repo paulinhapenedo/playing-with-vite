@@ -1,50 +1,33 @@
 import { create } from "zustand";
 
-import { BookReservationProps, DateRange, ReservationData } from "@/types";
-
+import { BookingPayload } from "@/types";
 interface StateProps {
-  bookings: BookReservationProps[];
-  confirmReservation: (reservationData: ReservationData) => void;
-  cancelReservation: (id: number) => void;
-  editReservation: (reservationData: BookReservationProps) => void;
-  getReservationsByPropertyId: (id: number) => DateRange[];
+  bookings: BookingPayload[];
+  confirmReservation: (payload: BookingPayload) => void;
+  cancelReservation: (reservationId: string) => void;
+  editReservation: (payload: BookingPayload) => void;
 }
 
 export const useBookingStore = create<StateProps>((set, get) => ({
   bookings: [],
-  confirmReservation: (reservationData) => {
-    const currentBookings = get().bookings;
-    const { id, ...dateRange } = reservationData;
-
-    // check if there's already bookings for a property
-    const getBookingById = currentBookings.filter(
-      (booking) => booking.id === id,
-    );
-
-    if (getBookingById.length) {
-      getBookingById[0].reservations.push({ ...dateRange });
-
-      return set(() => ({ bookings: currentBookings }));
-    }
-
-    // adds a new property
-    return set((state) => ({
-      bookings: [...state.bookings, { id, reservations: [{ ...dateRange }] }],
-    }));
-  },
+  confirmReservation: (payload) =>
+    set((state) => ({
+      bookings: [...state.bookings, payload],
+    })),
   cancelReservation: (id) =>
     set((state) => ({
-      bookings: state.bookings.filter((booking) => booking.id !== id),
+      bookings: state.bookings.filter(
+        (booking) => booking.reservationId !== id,
+      ),
     })),
-  editReservation: (reservationData) => {
+  editReservation: (payload) => {
     const currentBookings = get().bookings;
 
     // find booking by id
-    const updatedBookings = currentBookings.filter((booking) => {
-      if (booking.id === reservationData.id) {
+    const updatedBookings = currentBookings.map((booking) => {
+      if (booking.reservationId === payload.reservationId) {
         return {
-          ...booking,
-          ...reservationData,
+          ...payload,
         };
       }
 
@@ -54,18 +37,5 @@ export const useBookingStore = create<StateProps>((set, get) => ({
     set(() => ({
       bookings: updatedBookings,
     }));
-  },
-  getReservationsByPropertyId: (id) => {
-    const currentBookings = get().bookings;
-    const getPropertyBookings = currentBookings
-      .filter((booking) => {
-        if (booking.id !== id) return;
-
-        return booking.reservations;
-      })
-      .filter(Boolean)
-      .flatMap((booking) => booking.reservations);
-
-    return getPropertyBookings;
   },
 }));

@@ -18,13 +18,9 @@ export type Property = {
   maxPets: number;
 };
 
-export type DateRange = {
+export type BookingPayload = {
+  propertyId: number;
   startDate: Date;
   endDate: Date;
-};
-
-export type ReservationData = Pick<Property, "id"> & DateRange;
-
-export type BookReservationProps = Pick<Property, "id"> & {
-  reservations: DateRange[];
+  reservationId: string;
 };

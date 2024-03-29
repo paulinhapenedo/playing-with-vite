@@ -7,10 +7,11 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
 import { useBookingStore } from "@/stores/booking";
-import { Property, ReservationData } from "@/types";
+import { BookingPayload, Property } from "@/types";
 
 const formSchema = z.object({
   from: z.date(),
@@ -28,13 +29,13 @@ export const useCreateReservation = (property: Property) => {
   const disableDaysWithReservations = useCallback(() => {
     if (!bookings.length) return;
 
-    const getReservationsById = bookings.filter(
-      (booking) => booking.id === property.id,
+    const getAllReservationsFromProperty = bookings.filter(
+      (booking) => booking.propertyId === property.id,
     );
 
-    if (!getReservationsById.length) return;
+    if (!getAllReservationsFromProperty.length) return;
 
-    const disabledDays = getReservationsById[0].reservations.map((dates) => ({
+    const disabledDays = getAllReservationsFromProperty.map((dates) => ({
       from: dates.startDate,
       to: dates.endDate,
     }));
@@ -90,12 +91,10 @@ export const useCreateReservation = (property: Property) => {
     (range: { start: Date; end: Date }) =>
       bookings
         .map((booking) =>
-          booking.reservations?.find((config) =>
-            areIntervalsOverlapping(range, {
-              start: new Date(config.startDate),
-              end: new Date(config.endDate),
-            }),
-          ),
+          areIntervalsOverlapping(range, {
+            start: new Date(booking.startDate),
+            end: new Date(booking.endDate),
+          }),
         )
         .filter(Boolean),
     [bookings],
@@ -118,11 +117,14 @@ export const useCreateReservation = (property: Property) => {
       return;
     }
 
-    const payload: ReservationData = {
-      id: property.id,
+    const payload: BookingPayload = {
+      propertyId: property.id,
       startDate: values.from,
       endDate: values.to,
+      reservationId: uuidv4(),
     };
+
+    console.log("payload", payload);
 
     confirmReservation(payload);
     onCloseModal();
