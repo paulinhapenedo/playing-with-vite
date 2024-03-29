@@ -1,3 +1,4 @@
+import { DialogClose } from "@radix-ui/react-dialog";
 import { Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { DialogClose } from "@radix-ui/react-dialog";
 import { strings } from "./strings";
 import { useDeleteReservation } from "./useDeleteReservation";
 
